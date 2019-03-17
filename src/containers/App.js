@@ -7,6 +7,10 @@ import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
 
 class app extends Component {
+  constructor(props) {
+    super(props);
+    console.log('[App.js] constructor');
+  }
   state = {
     persons: [
       { id: Math.floor(Math.random() * 30), name: 'Max', age: 28 },
@@ -16,6 +20,17 @@ class app extends Component {
     otherState: 'some other value',
     showPersons: true
   };
+
+  static getDerivedStateFromProps(props, state) {
+    console.log('[App.js] getDerivedStateFromProps', props);
+    
+    return state;
+  }
+
+  componentDidMount() {
+    console.log('[App.js] componentDidMount');
+    
+  }
 
   //Changes displayed name as you type in input fiels
   nameChangedHandler = (event, id) => {
@@ -50,6 +65,9 @@ class app extends Component {
 
   
   render () {
+
+    console.log('[App.js] render');
+    
     let persons = null;
 
     if (this.state.showPersons) {
@@ -63,6 +81,7 @@ class app extends Component {
       <StyleRoot>
         <div>
           <Cockpit 
+            title={this.props.appTitle}
             showPersons={this.state.showPersons}
             persons={this.state.persons}
             toggle={this.togglePersonsHandler}/>
