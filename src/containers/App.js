@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
-import './App.css';
-import styles from './App.module.css';
-import Person from '../components/Persons/Person/Person';
 import Radium, {StyleRoot} from 'radium';
+//Styles
+import './App.css';
+//Components
+import Persons from '../components/Persons/Persons';
+import Cockpit from '../components/Cockpit/Cockpit';
 
 class app extends Component {
   state = {
@@ -15,6 +17,7 @@ class app extends Component {
     showPersons: true
   };
 
+  //Changes displayed name as you type in input fiels
   nameChangedHandler = (event, id) => {
     const personIndex = this.state.persons.findIndex(p => {
       return p.id === id;
@@ -32,55 +35,38 @@ class app extends Component {
     this.setState ({persons: persons});
   }
 
+  //Deletes person if you click on paragraph field
   deletePersonHandler = (personIndex) => {
     const persons = [...this.state.persons];
     persons.splice(personIndex, 1);
     this.setState({persons: persons});
   }
+
+  //Clciking button shows or hides persons
   togglePersonsHandler = () => {
     const doesShow = this.state.showPersons;
     this.setState({showPersons: !doesShow});
   }
+
+  
   render () {
     let persons = null;
-    let btnClass = '';
 
     if (this.state.showPersons) {
-      persons = (
-      <div>
-        {
-          this.state.persons.map((person, index) => {
-            return <Person 
-              click={() => this.deletePersonHandler(index)}
-              name={person.name} 
-              age={person.age}
-              key={person.id}
-              changed={(event) => this.nameChangedHandler(event, person.id)}/>
-          })
-        }
-      </div>
-      );
-      btnClass = styles.Red;
+      persons = <Persons 
+        persons={this.state.persons}
+        clicked={this.deletePersonHandler}
+        changed={this.nameChangedHandler}/>
     }
-
-    const assignedClasses = [];
-    if (this.state.persons.length <= 2) {
-      assignedClasses.push(styles.red);
-    }
-    if (this.state.persons.length <= 1) {
-      assignedClasses.push( styles.bold );
-    }
-
 
     return (
       <StyleRoot>
-        <div className={styles.App}>
-          <h1>Hi, I'm a react app.</h1>
-          <p className={assignedClasses.join(' ')}>This is really working!</p>
-          <button 
-          className={btnClass}
-            onClick={this.togglePersonsHandler}>Switch Name</button>
-            {persons}
+        <div>
+          <Cockpit 
+            showPersons={this.state.showPersons}
+            persons={this.state.persons}
+            toggle={this.togglePersonsHandler}/>
+          {persons}
         </div>
       </StyleRoot>
     );
